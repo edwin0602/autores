@@ -1,0 +1,99 @@
+﻿@page
+@model AutoresWeb.Pages.Libros.RegistrarModel
+@{
+}
+
+<h2>Nuevo libro</h2>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <form id="target">
+            <div class="form-group">
+                <label for="titulo">Titulo</label>
+                <input name="titulo" id="titulo" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="nPaginas">Paginas</label>
+                <input name="nPaginas" id="nPaginas" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="sinopsis">Sinopsis</label>
+                <textarea id="sinopsis" name="sinopsis" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="editorialID">Editorial</label>
+                <select class="form-control" id="editorialID" name="editorialID" required>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="autorID">Autor</label>
+                <select multiple class="form-control" id="autoresID" required>
+                </select>
+                <small class="form-text text-muted">Para seleccionar varios autores, utilice la tecla Ctrl + clic.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar libro</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="alertModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Ocurrio un error inesperado.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-default pull-left" data-dismiss="modal">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        serviceEditorial.obtenerEditoriales(function (editoriales) {
+            $.each(editoriales, function (key, value) {
+                $('#editorialID')
+                    .append($("<option></option>")
+                        .attr("value", value.id)
+                        .text(value.nombre));
+            });
+        });
+        serviceAutor.obtenerAutores(function (autores) {
+            $.each(autores, function (key, value) {
+                $('#autoresID')
+                    .append($("<option></option>")
+                        .attr("value", value.id)
+                        .text(`${value.apellidos}, ${value.nombres}`));
+            });
+        })
+    });
+
+    $("#target").submit(function (event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+        const toSend = Object.fromEntries(data.entries());
+
+        toSend.autores = $('#autoresID').val().map(function (x) {
+            return { autorId: x };
+        });
+
+        serviceLibro.guardarLibro(toSend,
+            function () {
+                $.LoadingOverlay("hide");
+                window.location.replace("/Libros");
+            },
+            function () {
+                $.LoadingOverlay("hide");
+                $("#alertModal").modal()
+            });
+    });
+
+</script>

@@ -1,0 +1,8 @@
+Buenas tardes, el proyecto utiliza CodeFirst y no requiere restauracion de la BD, 
+a menos que se quiera validar con los datos que he usado para las pruebas.
+
+Para crear la BD es necesario añadir en el nodo ConnectionStrings.Default la cadena de conexion con usuario y contraseña.
+Luego correr esta linea de codigo:
+dotnet ef --startup-project ./AutoresAPI/AutoresAPI.csproj -p ./AutoresAPI.Data/AutoresAPI.Data.csproj database update
+
+Es necesario instalar EF.

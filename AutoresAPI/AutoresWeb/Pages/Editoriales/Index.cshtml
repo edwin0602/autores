@@ -1,0 +1,28 @@
+﻿@page
+@model AutoresWeb.Pages.Editoriales.IndexModel
+@{
+}
+
+<div>
+    <table class='table table-hover' id="tablaDatos">
+        <thead>
+            <tr><th>Nombre</th><th>Sede</th><th>Identificador</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <hr />
+    <a class="btn btn-primary btn-sm" asp-area="" asp-page="/Editoriales/Registrar">Nueva editorial</a>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        serviceEditorial.obtenerEditoriales(function (data, status) {
+            for (i = 0; i < data.length; i++) {
+                $('#tablaDatos tbody').append(`<tr class="detail" data-id='` + data[i].id + `'><td>` + data[i].nombre + `</td><td>` + data[i].sede + `</td><td>` + data[i].id + `</td></tr>`);
+            }
+        });
+    });
+
+</script>

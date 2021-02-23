@@ -1,0 +1,65 @@
+﻿@page
+@model AutoresWeb.Pages.Editoriales.RegistrarModel
+@{
+}
+
+<h2>Nueva editorial</h2>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <form id="target">
+            <div class="form-group">
+                <label for="nombre">Nombre o Razon social</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" minlength="3" required>
+            </div>
+            <div class="form-group">
+                <label for="sede">Sede</label>
+                <input type="text" class="form-control" id="sede" name="sede" placeholder="Nombre o direccion de la sede" required>
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Registrar</button>
+                <a class="btn btn-secondary" asp-area="" asp-page="/Editoriales/Index">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="alertModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Ocurrio un error inesperado.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-default pull-left" data-dismiss="modal">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#target").submit(function (event) {
+            event.preventDefault();
+
+            const data = new FormData(event.target);
+            const toSend = Object.fromEntries(data.entries());
+
+            $.LoadingOverlay("show");
+            serviceEditorial.guardarEditorial(toSend,
+                function () {
+                    $.LoadingOverlay("hide");
+                    window.location.replace("/Editoriales");
+                },
+                function () {
+                    $.LoadingOverlay("hide");
+                    $("#alertModal").modal()
+                });
+        });
+    });
+
+</script>

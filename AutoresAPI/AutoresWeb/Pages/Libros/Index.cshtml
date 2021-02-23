@@ -1,0 +1,28 @@
+﻿@page
+@model AutoresWeb.Pages.Libros.IndexModel
+@{
+}
+
+<div>
+    <table class='table table-hover' id="tablaDatos">
+        <thead>
+            <tr><th>Titulo</th><th>Sinapsis</th><th>Editorial</th><th>Autores</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <hr />
+    <a class="btn btn-primary btn-sm" asp-area="" asp-page="/Libros/Registrar">Nuevo libro</a>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        serviceLibro.obtenerLibros(function (data) {
+            for (i = 0; i < data.length; i++) {
+                var libro = data[i];
+                var autores = libro.autores.map(x => `${x.autor.nombres} ${x.autor.apellidos}`);
+                $('#tablaDatos tbody').append(`<tr class="detail" data-id='${libro.isbn}'><td>${libro.titulo}</td><td>${libro.sinopsis}</td><td>${libro.editorial.nombre}</td><td>${autores}</td>/tr>`);
+            }
+        });
+    });
+</script>
